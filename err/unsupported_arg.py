@@ -1,0 +1,2 @@
+class UnsupportedArg(RuntimeError):
+    pass

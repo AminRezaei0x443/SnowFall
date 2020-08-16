@@ -1,9 +1,17 @@
 import torch
 
+from snowfall.events import ExecutionEvents
 
-class EarlyStopping(object):
-    def __init__(self, mode='min', min_delta=0, patience=10, percentage=False):
+
+class EarlyStopping(ExecutionEvents):
+    """
+        Implements EarlyStopping using callback events
+        with edit from: https://gist.github.com/stefanonardo/693d96ceb2f531fa05db530f3e21517d
+    """
+    def __init__(self, mode='min', metric="loss", min_delta=0, patience=10, percentage=False):
+        super().__init__()
         self.mode = mode
+        self.metric = metric
         self.min_delta = min_delta
         self.patience = patience
         self.best = None
@@ -14,6 +22,16 @@ class EarlyStopping(object):
         if patience == 0:
             self.is_better = lambda a, b: True
             self.step = lambda a: False
+
+    def on_validated(self, epoch, loss, **kwargs):
+        r = False
+        if self.metric == "loss":
+            r = self.step(torch.tensor(loss))
+        else:
+            r = self.step(torch.tensor(kwargs[self.metric]))
+        if r:
+            print("\nEarly Stopping the training procedure\n")
+        return r
 
     def step(self, metrics):
         if self.best is None:

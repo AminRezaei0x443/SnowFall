@@ -2,9 +2,12 @@ import torch
 from torch.nn.utils.convert_parameters import vector_to_parameters, parameters_to_vector
 from functools import reduce
 from torch.optim.optimizer import Optimizer
-
+from snowfall.optimizers import Optimizer as Opt
 
 # noinspection PyArgumentList
+from snowfall.optimizers import LambdaOptimizer
+
+
 class HessianFreeOptimizer(Optimizer):
     def __init__(self, params,
                  lr=1, damping=0.5, delta_decay=0.95,
@@ -22,6 +25,7 @@ class HessianFreeOptimizer(Optimizer):
             raise ValueError("Parameter Groups Are Not Supported!")
         self._params = self.param_groups[0]['params']
 
+    # noinspection PyMethodOverriding
     def step(self, closure, PC=None):
         """
         Performs an optimization step.
@@ -236,3 +240,14 @@ def empirical_fisher_diagonal(model, xb, yb, criterion):
         grads.append(torch.autograd.grad(fi, model.parameters(), retain_graph=False))
     vec = torch.cat([(torch.stack(p) ** 2).mean(0).detach().flatten() for p in zip(*grads)])
     return vec
+
+
+def hessian_free(lr=1, damping=0.5, delta_decay=0.95,
+                 conjugate_grad_iters=100, generalized_gauss_newton_matrix=True,
+                 log=False):
+    return LambdaOptimizer(lambda model: HessianFreeOptimizer(model.parameters(), lr, damping, delta_decay,
+                                                              conjugate_grad_iters, generalized_gauss_newton_matrix,
+                                                              log))
+
+
+Opt.register_opt("hessian_free", hessian_free)

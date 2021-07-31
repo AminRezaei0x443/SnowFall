@@ -9,7 +9,7 @@ class LambdaDataLoader:
     def __iter__(self):
         batches = iter(self.dl)
         for b in batches:
-            yield (self.func(*b))
+            yield self.func(*b)
 
 
 class LambdasDataLoader:

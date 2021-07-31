@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
+from torch.utils.data.dataloader import DataLoader
 from torch.utils.data.dataset import random_split
 from tqdm import tqdm
 
@@ -12,7 +12,7 @@ from snowfall.nn import Network
 from snowfall.optimizers import Optimizer
 
 
-class Circuit(SnowObject):
+class SnowModule(SnowObject):
     optimizer = None
     cost = None
     event_listeners = []
@@ -116,7 +116,7 @@ class Circuit(SnowObject):
             self.add_preprocessor(preprocessor)
         return self
 
-    def develop(self, train_dataset, epochs, val_split=0.15, train_batch=32, val_batch=32, progress=True):
+    def learn(self, train_dataset, epochs, val_split=0.15, train_batch=32, val_batch=32, progress=True):
         total = len(train_dataset)
         val_count = int(val_split * total)
         train_set, val_set = random_split(train_dataset, (total - val_count, val_count))

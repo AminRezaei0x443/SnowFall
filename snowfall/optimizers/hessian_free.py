@@ -1,11 +1,10 @@
 import torch
 from torch.nn.utils.convert_parameters import vector_to_parameters, parameters_to_vector
-from functools import reduce
 from torch.optim.optimizer import Optimizer
-from snowfall.optimizers import Optimizer as Opt
 
 # noinspection PyArgumentList
 from snowfall.optimizers import LambdaOptimizer
+from snowfall.optimizers import Optimizer as Opt
 
 
 class HessianFreeOptimizer(Optimizer):

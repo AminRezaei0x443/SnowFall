@@ -1,4 +1,4 @@
-from torch.utils.data import Dataset
+from torch.utils.data.dataset import Dataset
 
 
 class ConcatDataset(Dataset):

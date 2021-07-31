@@ -1,5 +1,3 @@
-from typing import Any
-
 import torch.nn as nn
 
 from snowfall.core import SnowObject

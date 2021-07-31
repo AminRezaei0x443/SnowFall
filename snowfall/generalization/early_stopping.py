@@ -24,7 +24,6 @@ class EarlyStopping(ExecutionEvents):
             self.step = lambda a: False
 
     def on_validated(self, epoch, loss, **kwargs):
-        r = False
         if self.metric == "loss":
             r = self.step(torch.tensor(loss))
         else:

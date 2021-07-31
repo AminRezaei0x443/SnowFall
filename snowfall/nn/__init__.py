@@ -1,2 +1,2 @@
 from .network import Network
-from .circuit import Circuit
+from .module import SnowModule
